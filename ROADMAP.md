@@ -52,14 +52,14 @@ SAP remains the source of record. This repository provides the reconciliation an
 
 ## Phase 4 — Classification framework
 
-- [ ] Add material-family taxonomy.
-- [ ] Add rule-based classification engine.
-- [ ] Add dictionary and synonym matching.
-- [ ] Add confidence and provenance to derived classifications.
-- [ ] Add contradiction detection.
-- [ ] Add manual-review queue.
-- [ ] Add reviewed overrides without changing SAP-derived facts.
-- [ ] Version classification rules.
+- [x] Add material-family taxonomy.
+- [x] Add rule-based classification engine.
+- [x] Add dictionary and synonym matching.
+- [x] Add confidence and provenance to derived classifications.
+- [x] Add contradiction detection.
+- [x] Add manual-review queue.
+- [x] Add reviewed overrides without changing SAP-derived facts.
+- [x] Version classification rules.
 
 ## Phase 5 — Plastic packaging module
 
