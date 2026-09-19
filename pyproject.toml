@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "sap-bom-analytics"
+version = "0.1.0"
+description = "Auditable analytics and reconciliation for SAP-derived Bills of Materials."
+authors = ["Diogo Ribeiro"]
+readme = "README.md"
+packages = [{ include = "sap_bom_analytics", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.12,<4.0"
+
+[tool.poetry.group.dev.dependencies]
+mypy = ">=1.10,<2.0"
+pytest = ">=8.0,<10.0"
+ruff = ">=0.9,<1.0"
+
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

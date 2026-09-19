@@ -12,10 +12,10 @@ SAP remains the source of record. This repository provides the reconciliation an
 - [x] Establish a canonical relational BOM model.
 - [x] Preserve SAP source identifiers and source lineage.
 - [x] Separate source facts from derived classifications.
-- [ ] Add PostgreSQL development environment with Docker Compose.
-- [ ] Add schema migrations.
+- [x] Add PostgreSQL development environment with Docker Compose.
+- [x] Add schema migrations.
 - [ ] Add automated SQL validation in CI.
-- [ ] Add Python package skeleton for ingestion and reconciliation.
+- [x] Add Python package skeleton for ingestion and reconciliation.
 
 ## Phase 1 — SAP ingestion
 
