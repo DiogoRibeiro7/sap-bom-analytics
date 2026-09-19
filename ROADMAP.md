@@ -19,13 +19,13 @@ SAP remains the source of record. This repository provides the reconciliation an
 
 ## Phase 1 — SAP ingestion
 
-- [ ] Define extract contracts for material master data.
-- [ ] Define extract contracts for BOM headers and BOM items.
-- [ ] Define extract contracts for units of measure and conversions.
-- [ ] Define extract contracts for plants and organisational context.
-- [ ] Support CSV extracts for local development.
+- [x] Define extract contracts for material master data.
+- [x] Define extract contracts for BOM headers and BOM items.
+- [x] Define extract contracts for units of measure and conversions.
+- [x] Define extract contracts for plants and organisational context.
+- [x] Support CSV extracts for local development.
 - [ ] Add adapters for common SAP export formats.
-- [ ] Record extraction run metadata and source hashes.
+- [x] Record extraction run metadata and source hashes.
 - [ ] Reject malformed records into an explicit quarantine table.
 
 ## Phase 2 — Staging and normalisation
