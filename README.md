@@ -93,6 +93,39 @@ make db-smoke
 
 Migrations are applied in lexical order from `migrations/`. Applied migration checksums are recorded in `audit.schema_migration`; modifying an already-applied migration causes the migration runner to fail rather than silently changing history.
 
+
+## SAP extract ingestion
+
+The initial ingestion layer supports CSV exports corresponding to the SAP tables most relevant to BOM reconstruction:
+
+| SAP table | Role in the analytical model |
+| --- | --- |
+| `MARA` | Material master attributes and base units |
+| `MAKT` | Material descriptions by language |
+| `MAST` | Material-to-BOM assignment by plant and BOM usage |
+| `STKO` | BOM header and validity metadata |
+| `STPO` | BOM component items and quantities |
+| `MARM` | Alternative units of measure and conversion ratios |
+| `T001W` | Plant metadata |
+
+CSV headers are matched case-insensitively. Required SAP key columns are validated before loading, while additional columns are retained in the raw table's `raw_payload` JSONB field.
+
+That is deliberate: SAP installations often contain customer-specific `Z*` or `ZZ*` fields. The ingestion layer should not discard them merely because the canonical model does not use them yet.
+
+After migrating the database, load all synthetic SAP extracts with:
+
+```bash
+make sap-ingest-example
+```
+
+A single extract can be loaded directly:
+
+```bash
+poetry run python scripts/sap_ingest_csv.py stpo path/to/STPO.csv
+```
+
+Every file creates an `audit.ingestion_run` containing the source path, SHA-256 digest, status and timestamps. Each raw row carries the ingestion run, source filename and source row number.
+
 ## Current status
 
 The repository is in its foundation phase.
