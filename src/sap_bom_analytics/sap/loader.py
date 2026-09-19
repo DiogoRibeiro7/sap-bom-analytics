@@ -33,10 +33,12 @@ def _create_ingestion_run(path: Path) -> int:
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     source_reference = str(path.resolve())
     output = run_psql(
+        "WITH inserted AS ("
         "INSERT INTO audit.ingestion_run "
         "(source_system, source_reference, source_sha256, status) VALUES ("
         f"'SAP_CSV', {_sql_literal(source_reference)}, '{digest}', 'running') "
-        "RETURNING ingestion_run_id;",
+        "RETURNING ingestion_run_id"
+        ") SELECT ingestion_run_id FROM inserted;",
         tuples_only=True,
     ).strip()
     if not output:
