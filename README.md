@@ -430,6 +430,48 @@ Backup, restore, logging, idempotency, and release procedures are documented in 
 
 Performance testing, incremental ingestion, property-based BOM tests, and least-privilege production database roles remain separate Phase 7 work.
 
+
+## Final production hardening
+
+Phase 7 now also covers the remaining operational safeguards.
+
+### Property-based BOM tests
+
+Hypothesis exercises mathematical invariants rather than only fixed examples:
+
+- cumulative quantity equals the product of edge ratios;
+- splitting and recombining a BOM path preserves cumulative quantity;
+- scaling numerator and base quantity together preserves the edge factor;
+- cycle detection is exactly equivalent to material-path membership.
+
+### Incremental SAP ingestion
+
+SAP CSV ingestion is content-addressed by:
+
+```text
+source system + SAP table + SHA-256
+```
+
+If the same table extract is submitted again unchanged, the successful ingestion run is reused and no raw rows are duplicated.
+
+### Large-hierarchy performance check
+
+CI creates a synthetic **250-level BOM**, executes the real `core.explode_bom(...)` recursive SQL function, verifies all 250 descendants are returned, and enforces a deliberately broad five-second CI ceiling.
+
+This is a regression guard, not a hardware benchmark.
+
+### Least-privilege roles
+
+Deployment role definitions live in `ops/roles.sql`:
+
+- `sap_bom_reader` — analytics read access only;
+- `sap_bom_ingest` — raw SAP ingestion plus ingestion audit updates;
+- `sap_bom_processor` — derived-layer processing and analytical read access.
+
+The repository defines group roles only. Deployment-specific login roles and credentials remain outside source control.
+
+CI applies the role model and verifies representative allowed and denied privileges.
+
 ## Current status
 
 The repository is in its foundation phase.
