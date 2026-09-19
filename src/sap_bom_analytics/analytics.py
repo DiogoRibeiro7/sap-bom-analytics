@@ -30,6 +30,14 @@ ANALYTICS_DATASETS: Final[dict[str, str]] = {
         "SELECT * FROM analytics.product_assessment_summary "
         "ORDER BY assessment_run_id"
     ),
+    "processing-runs": (
+        "SELECT * FROM analytics.processing_run_metrics "
+        "ORDER BY processing_run_id"
+    ),
+    "processing-summary": (
+        "SELECT * FROM analytics.processing_stage_summary "
+        "ORDER BY pipeline_name, stage_name"
+    ),
 }
 
 
