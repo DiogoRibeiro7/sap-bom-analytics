@@ -19,6 +19,7 @@ class SapIngestionResult:
     table: str
     source_file: str
     row_count: int
+    skipped: bool = False
 
 
 def _sql_literal(value: str) -> str:
@@ -28,15 +29,31 @@ def _sql_literal(value: str) -> str:
     return "'" + value.replace("'", "''") + "'"
 
 
-def _create_ingestion_run(path: Path) -> int:
+def _find_existing_ingestion(table: str, digest: str) -> int | None:
+    """Return a successful ingestion run for the same entity and content hash."""
+    table_literal = _sql_literal(table)
+    digest_literal = _sql_literal(digest)
+    output = run_psql(
+        "SELECT ingestion_run_id FROM audit.ingestion_run "
+        "WHERE source_system = 'SAP_CSV' "
+        f"AND source_entity = {table_literal} "
+        f"AND source_sha256 = {digest_literal} "
+        "AND status = 'succeeded' "
+        "ORDER BY ingestion_run_id DESC LIMIT 1;",
+        tuples_only=True,
+    ).strip()
+    return int(output) if output else None
+
+
+def _create_ingestion_run(table: str, path: Path, digest: str) -> int:
     """Create an audit record and return its identifier."""
-    digest = hashlib.sha256(path.read_bytes()).hexdigest()
     source_reference = str(path.resolve())
     output = run_psql(
         "WITH inserted AS ("
         "INSERT INTO audit.ingestion_run "
-        "(source_system, source_reference, source_sha256, status) VALUES ("
-        f"'SAP_CSV', {_sql_literal(source_reference)}, '{digest}', 'running') "
+        "(source_system, source_entity, source_reference, source_sha256, status) VALUES ("
+        f"'SAP_CSV', {_sql_literal(table)}, {_sql_literal(source_reference)}, "
+        f"'{digest}', 'running') "
         "RETURNING ingestion_run_id"
         ") SELECT ingestion_run_id FROM inserted;",
         tuples_only=True,
@@ -80,8 +97,19 @@ def ingest_sap_csv(table: str, path: Path) -> SapIngestionResult:
     if not path.is_file():
         raise FileNotFoundError(path)
 
-    ingestion_run_id = _create_ingestion_run(path)
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    existing_run_id = _find_existing_ingestion(table_key, digest)
     contract = SAP_CONTRACTS[table_key]
+    if existing_run_id is not None:
+        return SapIngestionResult(
+            ingestion_run_id=existing_run_id,
+            table=contract.target_table,
+            source_file=path.name,
+            row_count=0,
+            skipped=True,
+        )
+
+    ingestion_run_id = _create_ingestion_run(table_key, path, digest)
     try:
         prepared = prepare_sap_csv(path, contract, ingestion_run_id)
         columns = ", ".join(prepared.columns)
@@ -101,4 +129,5 @@ def ingest_sap_csv(table: str, path: Path) -> SapIngestionResult:
         table=prepared.table,
         source_file=path.name,
         row_count=prepared.row_count,
+        skipped=False,
     )

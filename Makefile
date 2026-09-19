@@ -1,4 +1,4 @@
-.PHONY: db-up db-down db-reset db-migrate db-seed db-smoke sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke classification-refresh classification-smoke classification-conflict-smoke packaging-smoke packaging-review-smoke analytics-smoke idempotency-check docs-build docs-serve sap-demo lint typecheck test
+.PHONY: db-up db-down db-reset db-migrate db-seed db-smoke sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke classification-refresh classification-smoke classification-conflict-smoke packaging-smoke packaging-review-smoke analytics-smoke idempotency-check incremental-smoke performance-smoke security-apply security-smoke docs-build docs-serve sap-demo lint typecheck test
 
 db-up:
 	docker compose up -d --wait db
@@ -80,3 +80,15 @@ docs-serve:
 
 idempotency-check:
 	poetry run python scripts/idempotency_check.py
+
+incremental-smoke:
+	poetry run python scripts/incremental_ingestion_check.py
+
+performance-smoke:
+	poetry run python scripts/bom_performance_check.py
+
+security-apply:
+	poetry run python scripts/db_sql.py ops/roles.sql
+
+security-smoke:
+	poetry run python scripts/db_sql.py sql/security/security_smoke.sql

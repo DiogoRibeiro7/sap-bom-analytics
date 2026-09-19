@@ -88,3 +88,43 @@ The project uses semantic versions in `pyproject.toml`.
 A tag such as `v0.1.0` triggers the release workflow. The workflow verifies that the tag matches the package version, runs quality checks, builds wheel and source artifacts, creates SHA-256 checksums, and uploads the artifacts to the workflow run.
 
 Publishing to PyPI or another registry is deliberately separate from the build step and should require an explicit trusted-publisher configuration.
+
+
+## Incremental ingestion
+
+Successful SAP extracts are deduplicated by source table and SHA-256 content hash.
+
+An unchanged extract is reported as skipped and reuses the previous successful ingestion-run identifier. No raw rows are inserted again.
+
+```bash
+make incremental-smoke
+```
+
+## BOM performance regression check
+
+```bash
+make performance-smoke
+```
+
+The check generates a 250-level linear BOM, measures the real recursive explosion query, validates the row count, and cleans up all synthetic records.
+
+The five-second threshold is intentionally generous. It detects pathological regressions without treating shared CI hardware as a precise benchmark.
+
+## Database roles
+
+Apply the group-role model as a database owner or deployment DBA:
+
+```bash
+make security-apply
+make security-smoke
+```
+
+The roles are:
+
+| Role | Intended access |
+| --- | --- |
+| `sap_bom_reader` | Read-only analytics |
+| `sap_bom_ingest` | Raw SAP inserts and ingestion audit updates |
+| `sap_bom_processor` | Reconciliation and derived-layer processing |
+
+Login creation, passwords, certificates, workload identity, and secret rotation are deployment concerns and are intentionally not stored in the repository.

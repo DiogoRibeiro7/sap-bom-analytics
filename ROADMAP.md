@@ -83,14 +83,14 @@ SAP remains the source of record. This repository provides the reconciliation an
 
 ## Phase 7 — Production hardening
 
-- [ ] Property-based tests for BOM transformations.
-- [ ] Performance tests for large BOM hierarchies.
-- [ ] Incremental ingestion.
+- [x] Property-based tests for BOM transformations.
+- [x] Performance tests for large BOM hierarchies.
+- [x] Incremental ingestion.
 - [x] Idempotent processing.
 - [x] Structured logging.
 - [x] Metrics and run observability.
 - [x] Database backup/restore documentation.
-- [ ] Security and least-privilege database roles.
+- [x] Security and least-privilege database roles.
 - [x] Reproducible releases and semantic versioning.
 
 ## Design principles

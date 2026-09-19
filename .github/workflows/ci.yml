@@ -86,6 +86,18 @@ jobs:
       - name: Verify idempotency
         run: make idempotency-check
 
+      - name: Verify incremental ingestion
+        run: make incremental-smoke
+
+      - name: Verify BOM explosion performance
+        run: make performance-smoke
+
+      - name: Apply least-privilege roles
+        run: make security-apply
+
+      - name: Verify database role boundaries
+        run: make security-smoke
+
       - name: Verify CLI observability
         run: |
           poetry run sap-bom reconcile
