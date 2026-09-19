@@ -41,14 +41,14 @@ SAP remains the source of record. This repository provides the reconciliation an
 
 ## Phase 3 — Canonical BOM model
 
-- [ ] Materialise product and material entities.
-- [ ] Build versioned BOM headers.
-- [ ] Build BOM component relationships.
-- [ ] Support multi-level BOM explosion.
-- [ ] Detect cycles in recursive BOMs.
-- [ ] Calculate component quantities in canonical units.
-- [ ] Preserve every canonical record's source lineage.
-- [ ] Add historical/as-of queries.
+- [x] Materialise product and material entities.
+- [x] Build versioned BOM headers.
+- [x] Build BOM component relationships.
+- [x] Support multi-level BOM explosion.
+- [x] Detect cycles in recursive BOMs.
+- [x] Calculate component quantities in canonical units.
+- [x] Preserve every canonical record's source lineage.
+- [x] Add historical/as-of queries.
 
 ## Phase 4 — Classification framework
 
