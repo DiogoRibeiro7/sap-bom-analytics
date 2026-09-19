@@ -1,4 +1,4 @@
-.PHONY: db-up db-down db-reset db-migrate db-seed db-smoke sap-ingest-example staging-refresh staging-smoke sap-demo lint typecheck test
+.PHONY: db-up db-down db-reset db-migrate db-seed db-smoke sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke sap-demo lint typecheck test
 
 db-up:
 	docker compose up -d db
@@ -43,4 +43,13 @@ staging-refresh:
 staging-smoke:
 	poetry run python scripts/db_sql.py sql/staging/staging_smoke.sql
 
-sap-demo: db-migrate sap-ingest-example staging-refresh staging-smoke
+core-refresh:
+	poetry run python scripts/db_sql.py sql/core/refresh_core.sql
+
+core-smoke:
+	poetry run python scripts/db_sql.py sql/core/core_smoke.sql
+
+cycle-smoke:
+	poetry run python scripts/db_sql.py sql/core/cycle_detection_smoke.sql
+
+sap-demo: db-migrate sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke
