@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import json
 import logging
-from contextlib import contextmanager
 from collections.abc import Iterator, Mapping
+from contextlib import contextmanager
 
 from sap_bom_analytics.db import run_psql
 
