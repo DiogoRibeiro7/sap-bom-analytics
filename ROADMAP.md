@@ -1,0 +1,104 @@
+# Roadmap
+
+## Vision
+
+`sap-bom-analytics` turns SAP-derived Bill of Materials data into a canonical, versioned, auditable analytical model.
+
+SAP remains the source of record. This repository provides the reconciliation and analytical layer required for downstream use cases such as packaging analysis, material classification, sustainability reporting, and Plastic Packaging Tax assessment.
+
+## Phase 0 — Foundation
+
+- [x] Define repository scope and architectural principles.
+- [x] Establish a canonical relational BOM model.
+- [x] Preserve SAP source identifiers and source lineage.
+- [x] Separate source facts from derived classifications.
+- [ ] Add PostgreSQL development environment with Docker Compose.
+- [ ] Add schema migrations.
+- [ ] Add automated SQL validation in CI.
+- [ ] Add Python package skeleton for ingestion and reconciliation.
+
+## Phase 1 — SAP ingestion
+
+- [ ] Define extract contracts for material master data.
+- [ ] Define extract contracts for BOM headers and BOM items.
+- [ ] Define extract contracts for units of measure and conversions.
+- [ ] Define extract contracts for plants and organisational context.
+- [ ] Support CSV extracts for local development.
+- [ ] Add adapters for common SAP export formats.
+- [ ] Record extraction run metadata and source hashes.
+- [ ] Reject malformed records into an explicit quarantine table.
+
+## Phase 2 — Staging and normalisation
+
+- [ ] Normalise SAP identifiers without losing original values.
+- [ ] Standardise units of measure.
+- [ ] Resolve material descriptions and material groups.
+- [ ] Detect duplicate source records.
+- [ ] Validate BOM parent/component relationships.
+- [ ] Track effective dates and BOM alternatives.
+- [ ] Add deterministic reconciliation rules.
+- [ ] Produce data-quality metrics per ingestion run.
+
+## Phase 3 — Canonical BOM model
+
+- [ ] Materialise product and material entities.
+- [ ] Build versioned BOM headers.
+- [ ] Build BOM component relationships.
+- [ ] Support multi-level BOM explosion.
+- [ ] Detect cycles in recursive BOMs.
+- [ ] Calculate component quantities in canonical units.
+- [ ] Preserve every canonical record's source lineage.
+- [ ] Add historical/as-of queries.
+
+## Phase 4 — Classification framework
+
+- [ ] Add material-family taxonomy.
+- [ ] Add rule-based classification engine.
+- [ ] Add dictionary and synonym matching.
+- [ ] Add confidence and provenance to derived classifications.
+- [ ] Add contradiction detection.
+- [ ] Add manual-review queue.
+- [ ] Add reviewed overrides without changing SAP-derived facts.
+- [ ] Version classification rules.
+
+## Phase 5 — Plastic packaging module
+
+- [ ] Identify packaging components.
+- [ ] Classify plastic versus non-plastic materials.
+- [ ] Add polymer taxonomy.
+- [ ] Store recycled-content evidence.
+- [ ] Calculate plastic weight per component and finished product.
+- [ ] Add configurable tax rules rather than hard-coded legislation.
+- [ ] Produce explainable assessment traces.
+- [ ] Add synthetic end-to-end examples.
+
+## Phase 6 — Analytics and interfaces
+
+- [ ] Add analytical views for product, BOM and material summaries.
+- [ ] Add data-quality dashboard inputs.
+- [ ] Add CLI for ingestion, reconciliation and BOM explosion.
+- [ ] Add export to Parquet and CSV.
+- [ ] Add API layer only if a real integration use case requires it.
+- [ ] Add MkDocs documentation and ER diagrams.
+
+## Phase 7 — Production hardening
+
+- [ ] Property-based tests for BOM transformations.
+- [ ] Performance tests for large BOM hierarchies.
+- [ ] Incremental ingestion.
+- [ ] Idempotent processing.
+- [ ] Structured logging.
+- [ ] Metrics and run observability.
+- [ ] Database backup/restore documentation.
+- [ ] Security and least-privilege database roles.
+- [ ] Reproducible releases and semantic versioning.
+
+## Design principles
+
+1. SAP is the source system, not the analytical model.
+2. Raw source facts are immutable.
+3. Derived facts never overwrite SAP-derived values.
+4. Every transformation must be traceable to its source and processing run.
+5. Effective dating is part of the model from the beginning.
+6. Regulatory logic belongs in configurable downstream modules.
+7. Deterministic methods come before statistical or machine-learning methods.
