@@ -57,7 +57,7 @@ def _read_text_export(path: Path) -> SapExport:
     return SapExport(
         headers=headers,
         rows=tuple(rows),
-        format_name=f"text:{repr(delimiter)}",
+        format_name=f"text:{delimiter!r}",
     )
 
 
