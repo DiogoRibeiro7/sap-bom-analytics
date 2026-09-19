@@ -139,7 +139,7 @@ def prepare_sap_csv(
 
 
 def _normalize_row(
-    row: Mapping[str | None, str | None],
+    row: Mapping[str, str],
     header_map: Mapping[str, str],
 ) -> dict[str, str]:
     """Normalize one source row while retaining all named input fields."""
