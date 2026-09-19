@@ -30,14 +30,14 @@ SAP remains the source of record. This repository provides the reconciliation an
 
 ## Phase 2 — Staging and normalisation
 
-- [ ] Normalise SAP identifiers without losing original values.
-- [ ] Standardise units of measure.
-- [ ] Resolve material descriptions and material groups.
-- [ ] Detect duplicate source records.
-- [ ] Validate BOM parent/component relationships.
-- [ ] Track effective dates and BOM alternatives.
-- [ ] Add deterministic reconciliation rules.
-- [ ] Produce data-quality metrics per ingestion run.
+- [x] Normalise SAP identifiers without losing original values.
+- [x] Standardise units of measure.
+- [x] Resolve material descriptions and material groups.
+- [x] Detect duplicate source records.
+- [x] Validate BOM parent/component relationships.
+- [x] Track effective dates and BOM alternatives.
+- [x] Add deterministic reconciliation rules.
+- [x] Produce data-quality metrics per ingestion run.
 
 ## Phase 3 — Canonical BOM model
 
