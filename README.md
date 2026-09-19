@@ -127,6 +127,27 @@ poetry run python scripts/sap_ingest_csv.py stpo path/to/STPO.csv
 Every file creates an `audit.ingestion_run` containing the source path, SHA-256 digest, status and timestamps. Each raw row carries the ingestion run, source filename and source row number.
 
 
+
+### SAP export adapters and quarantine
+
+The ingestion boundary accepts:
+
+- comma-delimited CSV;
+- semicolon-delimited text;
+- tab-delimited TSV;
+- pipe-delimited text when detected;
+- XLSX workbooks using the active worksheet.
+
+All formats are converted to the same contract-validation path, so SAP field semantics do not depend on how the extract was delivered.
+
+File-level problems such as missing required columns still fail the ingestion run. Row-level problems such as an empty required SAP key are written to `raw.quarantine` with the source file, source row number, reason code, reason detail, and complete normalized payload. Valid rows from the same file continue loading.
+
+Quarantine summaries are available through:
+
+```bash
+poetry run sap-bom summary quarantine
+```
+
 ## Staging and reconciliation
 
 The staging layer converts the raw SAP extracts into a normalized analytical representation without altering the original source values.

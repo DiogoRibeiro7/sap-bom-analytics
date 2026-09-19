@@ -118,6 +118,9 @@ def main() -> None:
             "table": result.table,
             "source_file": result.source_file,
             "row_count": result.row_count,
+            "quarantine_count": result.quarantine_count,
+            "source_format": result.source_format,
+            "skipped": result.skipped,
         }, sort_keys=True))
         return
 
