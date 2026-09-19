@@ -495,15 +495,21 @@ CI applies the role model and verifies representative allowed and denied privile
 
 ## Current status
 
-The repository is in its foundation phase.
+The project is preparing its first public release, **0.1.0**.
 
-The first schema defines:
+The implemented pipeline now covers:
 
-- ingestion runs;
-- canonical materials;
-- BOM identities;
-- BOM versions;
-- BOM components;
-- derived material classifications.
+- SAP export ingestion for CSV, semicolon-delimited text, TSV, pipe-delimited text, and XLSX;
+- row-level quarantine and ingestion lineage;
+- staging and deterministic reconciliation;
+- a canonical, versioned BOM model;
+- recursive multi-level BOM explosion with cycle detection;
+- material classification with evidence, conflicts, review, and overrides;
+- plastic-packaging and recycled-content assessment;
+- configurable downstream tax rules;
+- analytics views, CLI workflows, CSV/Parquet export, and MkDocs documentation;
+- CI, idempotency checks, observability, performance regression tests, incremental ingestion, and database role hardening.
 
-See [the architecture notes](docs/architecture.md) and [the roadmap](ROADMAP.md) for the planned implementation.
+The HTTP API remains intentionally deferred until there is a concrete integration consumer.
+
+See [the roadmap](ROADMAP.md) and [the changelog](CHANGELOG.md) for the current release scope.
