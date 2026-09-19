@@ -35,7 +35,7 @@ def test_empty_required_key_is_rejected(tmp_path: Path) -> None:
     path = tmp_path / "mara.csv"
     path.write_text("MATNR,MTART\n,VERP\n", encoding="utf-8")
 
-    with pytest.raises(ValueError, match="row 2.*matnr"):
+    with pytest.raises(ValueError, match=r"row 2.*matnr"):
         prepare_sap_csv(path, SAP_CONTRACTS["mara"], 1)
 
 
