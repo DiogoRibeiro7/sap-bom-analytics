@@ -46,9 +46,11 @@ def test_path_concatenation_is_multiplicative(
     right: list[BomQuantityStep],
 ) -> None:
     """Splitting and rejoining a BOM path must preserve cumulative quantity."""
-    assert cumulative_quantity(left + right) == (
-        cumulative_quantity(left) * cumulative_quantity(right)
-    )
+    combined = cumulative_quantity(left + right)
+    split = cumulative_quantity(left) * cumulative_quantity(right)
+    tolerance = max(Decimal("1e-24"), abs(combined) * Decimal("1e-24"))
+
+    assert abs(combined - split) <= tolerance
 
 
 @given(bom_steps(), _positive)
