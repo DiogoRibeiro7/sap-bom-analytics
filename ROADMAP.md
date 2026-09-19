@@ -24,9 +24,9 @@ SAP remains the source of record. This repository provides the reconciliation an
 - [x] Define extract contracts for units of measure and conversions.
 - [x] Define extract contracts for plants and organisational context.
 - [x] Support CSV extracts for local development.
-- [ ] Add adapters for common SAP export formats.
+- [x] Add adapters for common SAP export formats.
 - [x] Record extraction run metadata and source hashes.
-- [ ] Reject malformed records into an explicit quarantine table.
+- [x] Reject malformed records into an explicit quarantine table.
 
 ## Phase 2 — Staging and normalisation
 
