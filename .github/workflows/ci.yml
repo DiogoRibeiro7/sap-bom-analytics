@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      - name: Install dependencies
+        run: poetry install --no-interaction
+
+      - name: Lint
+        run: poetry run ruff check .
+
+      - name: Type check
+        run: poetry run mypy src scripts
+
+      - name: Unit tests
+        run: poetry run pytest
+
+      - name: Build documentation
+        run: poetry run mkdocs build --strict
+
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      - name: Install dependencies
+        run: poetry install --no-interaction
+
+      - name: Start PostgreSQL
+        run: make db-up
+
+      - name: Apply migrations
+        run: make db-migrate
+
+      - name: Ingest synthetic SAP extracts
+        run: make sap-ingest-example
+
+      - name: Run full synthetic pipeline
+        run: |
+          make staging-refresh
+          make staging-smoke
+          make core-refresh
+          make core-smoke
+          make cycle-smoke
+          make classification-refresh
+          make classification-smoke
+          make classification-conflict-smoke
+          make packaging-smoke
+          make packaging-review-smoke
+          make analytics-smoke
+
+      - name: Verify idempotency
+        run: make idempotency-check
+
+      - name: Verify CLI observability
+        run: |
+          poetry run sap-bom reconcile
+          poetry run sap-bom summary processing-summary
+
+      - name: Show container logs on failure
+        if: failure()
+        run: docker compose logs db
