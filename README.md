@@ -62,6 +62,37 @@ The initial system of record is PostgreSQL.
 - Deterministic reconciliation comes before machine learning.
 - Regulatory rules stay outside the canonical BOM model.
 
+## Local development
+
+Requirements:
+
+- Docker with Docker Compose;
+- Python 3.12+;
+- Poetry for development tooling.
+
+Start PostgreSQL and initialise the schema:
+
+```bash
+cp .env.example .env
+make db-up
+make db-migrate
+make db-seed
+make db-smoke
+```
+
+The synthetic fixture creates one finished product with a three-component packaging BOM and preserves SAP-like source record identifiers for lineage checks.
+
+To rebuild from an empty database:
+
+```bash
+make db-reset
+make db-migrate
+make db-seed
+make db-smoke
+```
+
+Migrations are applied in lexical order from `migrations/`. Applied migration checksums are recorded in `audit.schema_migration`; modifying an already-applied migration causes the migration runner to fail rather than silently changing history.
+
 ## Current status
 
 The repository is in its foundation phase.
