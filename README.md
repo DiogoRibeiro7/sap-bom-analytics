@@ -126,6 +126,44 @@ poetry run python scripts/sap_ingest_csv.py stpo path/to/STPO.csv
 
 Every file creates an `audit.ingestion_run` containing the source path, SHA-256 digest, status and timestamps. Each raw row carries the ingestion run, source filename and source row number.
 
+
+## Staging and reconciliation
+
+The staging layer converts the raw SAP extracts into a normalized analytical representation without altering the original source values.
+
+The current transformation:
+
+- keeps the original SAP material and BOM identifiers;
+- creates separate normalized identifiers for joins;
+- chooses a preferred material description, prioritising English where available;
+- parses SAP `YYYYMMDD` validity dates into PostgreSQL dates;
+- parses numeric weights, quantities, and unit-conversion ratios;
+- normalizes unit codes to upper case;
+- resolves `MAST → STKO → STPO` into staged BOM headers and components;
+- records source-row lineage back to the raw SAP tables;
+- emits deterministic data-quality issues for missing material masters, missing BOM headers, and invalid unit conversions.
+
+Run the complete synthetic pipeline with:
+
+```bash
+make db-reset
+make sap-demo
+```
+
+After that, useful inspection queries include:
+
+```sql
+SELECT *
+FROM staging.bom_component
+ORDER BY bom_number, item_number;
+
+SELECT *
+FROM staging.data_quality_issue
+ORDER BY severity, issue_type;
+```
+
+The staging refresh is intentionally deterministic SQL. It can be reviewed, reproduced, and audited without hiding reconciliation decisions in application code.
+
 ## Current status
 
 The repository is in its foundation phase.
