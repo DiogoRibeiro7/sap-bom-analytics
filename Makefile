@@ -67,7 +67,7 @@ packaging-smoke:
 packaging-review-smoke:
 	poetry run python scripts/db_sql.py sql/packaging/review_gate_smoke.sql
 
-sap-demo: db-migrate sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke classification-refresh classification-smoke classification-conflict-smoke packaging-smoke packaging-review-smoke
+sap-demo: db-migrate sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke classification-refresh classification-smoke classification-conflict-smoke packaging-smoke packaging-review-smoke analytics-smoke
 
 analytics-smoke:
 	poetry run python scripts/db_sql.py sql/analytics/analytics_smoke.sql
