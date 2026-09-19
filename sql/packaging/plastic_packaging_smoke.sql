@@ -79,10 +79,10 @@ BEGIN
 
     tax_id := tax.assess_packaging(run_id, demo_rule_set_id);
 
-    SELECT recycled_fraction, decision, tax_amount
+    SELECT assessment.recycled_fraction, assessment.decision, assessment.tax_amount
     INTO recycled_fraction, decision_value, tax_amount_value
-    FROM tax.assessment
-    WHERE tax_assessment_id = tax_id;
+    FROM tax.assessment AS assessment
+    WHERE assessment.tax_assessment_id = tax_id;
 
     IF abs(recycled_fraction - (0.023::NUMERIC / 0.043::NUMERIC)) > 0.000000001 THEN
         RAISE EXCEPTION 'Unexpected recycled fraction %', recycled_fraction;
