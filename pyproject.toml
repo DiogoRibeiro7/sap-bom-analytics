@@ -8,7 +8,8 @@ packages = [{ include = "sap_bom_analytics", from = "src" }]
 
 [tool.poetry.dependencies]
 python = ">=3.12,<4.0"
-pyarrow = ">=18.0,<23.0"\nopenpyxl = ">=3.1,<4.0"
+pyarrow = ">=18.0,<23.0"
+openpyxl = ">=3.1,<4.0"
 
 [tool.poetry.scripts]
 sap-bom = "sap_bom_analytics.cli:main"
