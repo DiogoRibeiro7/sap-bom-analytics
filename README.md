@@ -209,6 +209,63 @@ make sap-demo
 
 The workflow also runs a separate rollback-only cycle test to prove that circular BOMs are detected.
 
+
+## Material classification
+
+The classification layer keeps inference separate from SAP facts and from human review.
+
+It has three distinct layers:
+
+1. **Evidence** — dictionary matches and deterministic rules.
+2. **Resolved classification** — the selected family/polymer with confidence, status and provenance.
+3. **Reviewed override** — an explicit human decision that supersedes the resolved result without deleting the original evidence.
+
+The initial taxonomy includes plastic, paper/board, glass, metal, wood, other and unknown material families, plus common polymer codes such as HDPE, LDPE, PET, PP, PS and PVC.
+
+Dictionary terms carry:
+
+- canonical term;
+- synonym;
+- matching strategy;
+- material family;
+- optional polymer;
+- confidence;
+- priority;
+- classifier version.
+
+Rules carry equivalent provenance plus the field they inspect and the rationale for the heuristic.
+
+### Resolution states
+
+A material classification has one of four states:
+
+- `classified` — sufficiently strong and non-contradictory evidence;
+- `review` — weak or absent evidence;
+- `conflict` — strong evidence supports incompatible material families;
+- `overridden` — an active reviewed override determines the final result.
+
+For example, the synthetic descriptions `Bottle 500 ml clear` and `Closure black` produce plastic heuristics, but their confidence is deliberately below the automatic-classification threshold. They therefore remain in the review queue instead of being presented as facts.
+
+A description such as `HDPE bottle` generates both polymer dictionary evidence and the weaker bottle heuristic. The dictionary evidence wins deterministically, while all evidence remains queryable.
+
+### Review queue
+
+```sql
+SELECT *
+FROM classification.review_queue
+ORDER BY status, sap_material_id;
+```
+
+### Refresh
+
+```bash
+make classification-refresh
+make classification-smoke
+make classification-conflict-smoke
+```
+
+The contradiction smoke test creates a temporary synthetic conflict, verifies that the material becomes `conflict`, adds a reviewed override, verifies the `overridden` result, and rolls the entire test back.
+
 ## Current status
 
 The repository is in its foundation phase.
