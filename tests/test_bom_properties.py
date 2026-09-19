@@ -6,6 +6,7 @@ from decimal import Decimal
 
 from hypothesis import given
 from hypothesis import strategies as st
+from hypothesis.strategies import DrawFn
 
 from sap_bom_analytics.bom_math import (
     BomQuantityStep,
@@ -19,7 +20,7 @@ _non_negative = st.integers(min_value=0, max_value=10_000).map(Decimal)
 
 
 @st.composite
-def bom_steps(draw: st.DrawFn) -> BomQuantityStep:
+def bom_steps(draw: DrawFn) -> BomQuantityStep:
     """Generate one valid BOM quantity step."""
     return BomQuantityStep(
         quantity=draw(_non_negative),
