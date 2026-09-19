@@ -9,6 +9,8 @@ from pathlib import Path
 
 from sap_bom_analytics.analytics import ANALYTICS_DATASETS, dataset_csv, export_dataset
 from sap_bom_analytics.db import execute_sql_file, repository_root, run_psql
+from sap_bom_analytics.logging import configure_logging
+from sap_bom_analytics.observability import processing_run
 from sap_bom_analytics.sap.contracts import SAP_CONTRACTS
 from sap_bom_analytics.sap.loader import ingest_sap_csv
 
@@ -16,6 +18,10 @@ from sap_bom_analytics.sap.loader import ingest_sap_csv
 def _parser() -> argparse.ArgumentParser:
     """Build the command-line parser."""
     parser = argparse.ArgumentParser(prog="sap-bom")
+    parser.add_argument(
+        "--log-level", default="INFO", choices=("DEBUG", "INFO", "WARNING", "ERROR"),
+        help="Structured JSON log level written to stderr.",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     ingest = subparsers.add_parser("ingest", help="Ingest one SAP CSV extract.")
@@ -59,10 +65,22 @@ def _sql_literal(value: str) -> str:
 def _run_reconciliation(skip_classification: bool) -> None:
     """Refresh deterministic derived layers in dependency order."""
     root = repository_root()
-    execute_sql_file(root / "sql" / "staging" / "refresh_staging.sql")
-    execute_sql_file(root / "sql" / "core" / "refresh_core.sql")
+    stages: list[tuple[str, Path]] = [
+        ("staging", root / "sql" / "staging" / "refresh_staging.sql"),
+        ("core", root / "sql" / "core" / "refresh_core.sql"),
+    ]
     if not skip_classification:
-        execute_sql_file(root / "sql" / "classification" / "refresh_classification.sql")
+        stages.append(
+            ("classification", root / "sql" / "classification" / "refresh_classification.sql")
+        )
+
+    for stage_name, path in stages:
+        with processing_run(
+            "reconciliation",
+            stage_name,
+            metadata={"sql_file": str(path.relative_to(root))},
+        ):
+            execute_sql_file(path)
 
 
 def _explode(material: str, as_of_date: date | None, plant: str | None) -> str:
@@ -91,6 +109,7 @@ def _explode(material: str, as_of_date: date | None, plant: str | None) -> str:
 def main() -> None:
     """Run the SAP BOM analytics CLI."""
     args = _parser().parse_args()
+    configure_logging(args.log_level)
 
     if args.command == "ingest":
         result = ingest_sap_csv(args.table, args.path)
