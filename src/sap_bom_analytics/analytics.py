@@ -18,6 +18,10 @@ ANALYTICS_DATASETS: Final[dict[str, str]] = {
     "ingestion-runs": (
         "SELECT * FROM analytics.ingestion_run_summary ORDER BY ingestion_run_id"
     ),
+    "quarantine": (
+        "SELECT * FROM analytics.quarantine_summary "
+        "ORDER BY ingestion_run_id, source_entity, reason_code"
+    ),
     "quality": (
         "SELECT * FROM analytics.data_quality_dashboard "
         "ORDER BY observed_at DESC, quality_layer, issue_type"
