@@ -164,6 +164,51 @@ ORDER BY severity, issue_type;
 
 The staging refresh is intentionally deterministic SQL. It can be reviewed, reproduced, and audited without hiding reconciliation decisions in application code.
 
+
+## Canonical BOM model
+
+The core layer materializes staged SAP data into stable relational entities:
+
+- `core.material`;
+- `core.bom`;
+- `core.bom_version`;
+- `core.bom_component`.
+
+Each canonical record keeps lineage back to its staging record and ingestion run. BOM versions also retain the SAP base quantity and base unit, which are required for correct multi-level quantity propagation.
+
+Where a component quantity uses an alternative unit and a valid `MARM` conversion is available, the core layer calculates `quantity_base_unit` alongside the original quantity and unit.
+
+### Recursive BOM explosion
+
+`core.explode_bom(...)` recursively expands a BOM from a root material for a selected date and optional plant:
+
+```sql
+SELECT *
+FROM core.explode_bom(
+    (SELECT material_id
+     FROM core.material
+     WHERE sap_material_id = 'FG-1000'),
+    DATE '2026-01-01',
+    'GB01'
+)
+ORDER BY depth, material_path;
+```
+
+The function returns both direct and cumulative quantities. Cumulative quantities account for each BOM version's base quantity.
+
+The traversal records the material path as an array. If a component already exists in the current path, `cycle_detected` becomes true and recursion stops on that branch. This prevents malformed circular BOMs from producing infinite recursion.
+
+The date argument provides an as-of view of the structure by selecting only BOM versions whose effective interval contains that date.
+
+Run the complete raw-to-core example with:
+
+```bash
+make db-reset
+make sap-demo
+```
+
+The workflow also runs a separate rollback-only cycle test to prove that circular BOMs are detected.
+
 ## Current status
 
 The repository is in its foundation phase.
