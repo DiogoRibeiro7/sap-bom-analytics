@@ -16,7 +16,6 @@ CREATE OR REPLACE VIEW analytics.ingestion_run_summary AS
 SELECT
     run.ingestion_run_id,
     run.source_system,
-    run.source_entity,
     run.source_reference,
     run.source_sha256,
     run.status,
@@ -28,7 +27,8 @@ SELECT
       + COALESCE(stko.row_count, 0)
       + COALESCE(stpo.row_count, 0)
       + COALESCE(marm.row_count, 0)
-      + COALESCE(t001w.row_count, 0) AS raw_row_count
+      + COALESCE(t001w.row_count, 0) AS raw_row_count,
+    run.source_entity
 FROM audit.ingestion_run AS run
 LEFT JOIN (
     SELECT ingestion_run_id, COUNT(*) AS row_count
