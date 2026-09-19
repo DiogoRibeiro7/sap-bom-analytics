@@ -1,0 +1,26 @@
+site_name: SAP BOM Analytics
+site_description: Auditable SAP BOM reconciliation, classification, and packaging analytics
+repo_url: https://github.com/DiogoRibeiro7/sap-bom-analytics
+repo_name: DiogoRibeiro7/sap-bom-analytics
+
+theme:
+  name: material
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Data Model: data-model.md
+  - CLI: cli.md
+  - Quality: quality.md
+  - Plastic Packaging: plastic-packaging.md
