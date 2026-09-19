@@ -14,7 +14,7 @@ SAP remains the source of record. This repository provides the reconciliation an
 - [x] Separate source facts from derived classifications.
 - [x] Add PostgreSQL development environment with Docker Compose.
 - [x] Add schema migrations.
-- [ ] Add automated SQL validation in CI.
+- [x] Add automated SQL validation in CI.
 - [x] Add Python package skeleton for ingestion and reconciliation.
 
 ## Phase 1 — SAP ingestion
@@ -86,12 +86,12 @@ SAP remains the source of record. This repository provides the reconciliation an
 - [ ] Property-based tests for BOM transformations.
 - [ ] Performance tests for large BOM hierarchies.
 - [ ] Incremental ingestion.
-- [ ] Idempotent processing.
-- [ ] Structured logging.
-- [ ] Metrics and run observability.
-- [ ] Database backup/restore documentation.
+- [x] Idempotent processing.
+- [x] Structured logging.
+- [x] Metrics and run observability.
+- [x] Database backup/restore documentation.
 - [ ] Security and least-privilege database roles.
-- [ ] Reproducible releases and semantic versioning.
+- [x] Reproducible releases and semantic versioning.
 
 ## Design principles
 

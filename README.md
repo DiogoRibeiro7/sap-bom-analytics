@@ -406,6 +406,30 @@ make docs-serve
 
 The documentation includes architecture and ER diagrams rendered from Mermaid definitions.
 
+
+## Production hardening
+
+The repository now has a CI baseline that runs static checks, tests, strict documentation builds, PostgreSQL migrations, SAP fixture ingestion, the full synthetic SQL pipeline, idempotency checks, and CLI observability checks.
+
+Reconciliation commands emit structured JSON logs to stderr and persist stage-level run metadata in `audit.processing_run`. Operational metrics are available through:
+
+```bash
+poetry run sap-bom summary processing-runs
+poetry run sap-bom summary processing-summary
+```
+
+Deterministic rebuilds can be checked with:
+
+```bash
+make idempotency-check
+```
+
+Tag-driven releases validate the semantic version, run quality checks, build wheel and source distributions, and generate SHA-256 checksums for the artifacts.
+
+Backup, restore, logging, idempotency, and release procedures are documented in [docs/operations.md](docs/operations.md).
+
+Performance testing, incremental ingestion, property-based BOM tests, and least-privilege production database roles remain separate Phase 7 work.
+
 ## Current status
 
 The repository is in its foundation phase.
