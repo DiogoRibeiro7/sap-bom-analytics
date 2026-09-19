@@ -1,8 +1,19 @@
 [tool.poetry]
 name = "sap-bom-analytics"
 version = "0.1.0"
-description = "Auditable analytics and reconciliation for SAP-derived Bills of Materials."
+description = "Auditable ingestion, reconciliation, classification, and analytics for SAP-derived Bills of Materials."
 authors = ["Diogo Ribeiro"]
+homepage = "https://github.com/DiogoRibeiro7/sap-bom-analytics"
+repository = "https://github.com/DiogoRibeiro7/sap-bom-analytics"
+documentation = "https://DiogoRibeiro7.github.io/sap-bom-analytics/"
+keywords = ["sap", "bom", "bill-of-materials", "analytics", "data-engineering", "packaging"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Database",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
 readme = "README.md"
 packages = [{ include = "sap_bom_analytics", from = "src" }]
 
