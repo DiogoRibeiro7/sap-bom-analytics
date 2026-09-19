@@ -63,14 +63,14 @@ SAP remains the source of record. This repository provides the reconciliation an
 
 ## Phase 5 — Plastic packaging module
 
-- [ ] Identify packaging components.
-- [ ] Classify plastic versus non-plastic materials.
-- [ ] Add polymer taxonomy.
-- [ ] Store recycled-content evidence.
-- [ ] Calculate plastic weight per component and finished product.
-- [ ] Add configurable tax rules rather than hard-coded legislation.
-- [ ] Produce explainable assessment traces.
-- [ ] Add synthetic end-to-end examples.
+- [x] Identify packaging components.
+- [x] Classify plastic versus non-plastic materials.
+- [x] Add polymer taxonomy.
+- [x] Store recycled-content evidence.
+- [x] Calculate plastic weight per component and finished product.
+- [x] Add configurable tax rules rather than hard-coded legislation.
+- [x] Produce explainable assessment traces.
+- [x] Add synthetic end-to-end examples.
 
 ## Phase 6 — Analytics and interfaces
 

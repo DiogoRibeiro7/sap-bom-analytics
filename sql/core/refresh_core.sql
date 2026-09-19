@@ -1,7 +1,16 @@
 BEGIN;
 
 TRUNCATE TABLE
+    tax.assessment,
+    packaging.component_assessment,
+    packaging.assessment_run,
+    packaging.recycled_content_evidence,
+    packaging.material_profile,
+    packaging.scope_evidence,
+    packaging.scope_override,
+    classification.material_evidence,
     classification.material_classification,
+    classification.material_override,
     core.bom_component,
     core.bom_version,
     core.bom,
@@ -9,15 +18,20 @@ TRUNCATE TABLE
 RESTART IDENTITY;
 
 INSERT INTO core.material (
-    source_system, sap_material_id, description, material_group, base_unit,
-    valid_from, valid_to, ingestion_run_id, source_staging_material_id
+    source_system, sap_material_id, description, material_group, material_type, base_unit,
+    gross_weight, net_weight, weight_unit, valid_from, valid_to, ingestion_run_id,
+    source_staging_material_id
 )
 SELECT
     source_system,
     sap_material_id,
     description,
     material_group,
+    material_type,
     base_unit,
+    gross_weight,
+    net_weight,
+    weight_unit,
     DATE '1900-01-01',
     NULL,
     ingestion_run_id,
