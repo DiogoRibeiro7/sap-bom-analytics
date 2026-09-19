@@ -1,5 +1,7 @@
 BEGIN;
 
+CREATE SCHEMA IF NOT EXISTS audit;
+
 CREATE TABLE IF NOT EXISTS audit.schema_migration (
     version TEXT PRIMARY KEY,
     checksum TEXT NOT NULL,
