@@ -74,12 +74,12 @@ SAP remains the source of record. This repository provides the reconciliation an
 
 ## Phase 6 — Analytics and interfaces
 
-- [ ] Add analytical views for product, BOM and material summaries.
-- [ ] Add data-quality dashboard inputs.
-- [ ] Add CLI for ingestion, reconciliation and BOM explosion.
-- [ ] Add export to Parquet and CSV.
+- [x] Add analytical views for product, BOM and material summaries.
+- [x] Add data-quality dashboard inputs.
+- [x] Add CLI for ingestion, reconciliation and BOM explosion.
+- [x] Add export to Parquet and CSV.
 - [ ] Add API layer only if a real integration use case requires it.
-- [ ] Add MkDocs documentation and ER diagrams.
+- [x] Add MkDocs documentation and ER diagrams.
 
 ## Phase 7 — Production hardening
 

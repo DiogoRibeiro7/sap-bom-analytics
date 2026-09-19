@@ -1,4 +1,4 @@
-.PHONY: db-up db-down db-reset db-migrate db-seed db-smoke sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke classification-refresh classification-smoke classification-conflict-smoke packaging-smoke packaging-review-smoke sap-demo lint typecheck test
+.PHONY: db-up db-down db-reset db-migrate db-seed db-smoke sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke classification-refresh classification-smoke classification-conflict-smoke packaging-smoke packaging-review-smoke analytics-smoke docs-build docs-serve sap-demo lint typecheck test
 
 db-up:
 	docker compose up -d db
@@ -67,4 +67,13 @@ packaging-smoke:
 packaging-review-smoke:
 	poetry run python scripts/db_sql.py sql/packaging/review_gate_smoke.sql
 
-sap-demo: db-migrate sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke classification-refresh classification-smoke classification-conflict-smoke packaging-smoke packaging-review-smoke
+sap-demo: db-migrate sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke classification-refresh classification-smoke classification-conflict-smoke packaging-smoke packaging-review-smoke analytics-smoke
+
+analytics-smoke:
+	poetry run python scripts/db_sql.py sql/analytics/analytics_smoke.sql
+
+docs-build:
+	poetry run mkdocs build --strict
+
+docs-serve:
+	poetry run mkdocs serve

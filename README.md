@@ -371,6 +371,41 @@ make packaging-review-smoke
 
 The first test proves the complete calculation with reviewed synthetic evidence. The second removes those decisions and verifies that unresolved classifications correctly block an automatic tax result.
 
+
+## Analytics and CLI
+
+The `analytics` schema provides stable views for:
+
+- material summaries;
+- BOM summaries;
+- BOM component detail;
+- ingestion-run history;
+- product packaging assessments;
+- detailed data-quality issues;
+- dashboard-ready quality scorecards.
+
+A typed command-line interface exposes the common workflows:
+
+```bash
+poetry run sap-bom ingest mara examples/sap/mara.csv
+poetry run sap-bom reconcile
+poetry run sap-bom explode FG-1000 --date 2026-01-01 --plant GB01
+poetry run sap-bom quality
+poetry run sap-bom summary materials
+poetry run sap-bom export bom-components output/bom-components.parquet --format parquet
+```
+
+Exports support CSV and Parquet and are restricted to named analytical datasets rather than arbitrary SQL.
+
+Documentation is built with MkDocs Material:
+
+```bash
+make docs-build
+make docs-serve
+```
+
+The documentation includes architecture and ER diagrams rendered from Mermaid definitions.
+
 ## Current status
 
 The repository is in its foundation phase.
