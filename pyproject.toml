@@ -8,11 +8,18 @@ packages = [{ include = "sap_bom_analytics", from = "src" }]
 
 [tool.poetry.dependencies]
 python = ">=3.12,<4.0"
+pyarrow = ">=18.0,<23.0"
+
+[tool.poetry.scripts]
+sap-bom = "sap_bom_analytics.cli:main"
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.10,<2.0"
 pytest = ">=8.0,<10.0"
 ruff = ">=0.9,<1.0"
+mkdocs = ">=1.6,<2.0"
+mkdocs-material = ">=9.6,<10.0"
+pymdown-extensions = ">=10.14,<11.0"
 
 [build-system]
 requires = ["poetry-core>=1.9.0"]
