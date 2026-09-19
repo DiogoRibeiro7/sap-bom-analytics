@@ -38,10 +38,12 @@ def start_processing_run(
         raise TypeError("stage_name must be a non-empty string")
     metadata_value = {} if metadata is None else dict(metadata)
     result = run_psql(
+        "WITH inserted AS ("
         "INSERT INTO audit.processing_run "
         "(pipeline_name, stage_name, status, metadata) VALUES ("
         f"{_sql_literal(pipeline_name)}, {_sql_literal(stage_name)}, 'running', "
-        f"{_json_literal(metadata_value)}) RETURNING processing_run_id;",
+        f"{_json_literal(metadata_value)}) RETURNING processing_run_id"
+        ") SELECT processing_run_id FROM inserted;",
         tuples_only=True,
     ).strip()
     if not result:

@@ -5,9 +5,9 @@ from __future__ import annotations
 import csv
 import io
 import json
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Mapping
 
 from sap_bom_analytics.sap.contracts import SapExtractContract
 

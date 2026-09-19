@@ -7,7 +7,7 @@ TRUNCATE TABLE
     staging.plant,
     staging.material,
     staging.data_quality_issue
-RESTART IDENTITY;
+RESTART IDENTITY CASCADE;
 
 WITH ranked_descriptions AS (
     SELECT

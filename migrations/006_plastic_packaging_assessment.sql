@@ -220,8 +220,9 @@ ON CONFLICT (rule_set_code, version) DO NOTHING;
 INSERT INTO tax.rule_parameter (
     rule_set_id, parameter_name, numeric_value, text_value, unit, description
 )
-SELECT rule_set_id, parameter_name, numeric_value, text_value, unit, description
-FROM tax.rule_set
+SELECT rule_set.rule_set_id, parameter.parameter_name, parameter.numeric_value,
+       parameter.text_value, parameter.unit, parameter.description
+FROM tax.rule_set AS rule_set
 CROSS JOIN (
     VALUES
         ('minimum_recycled_fraction', 0.500000000000::NUMERIC, NULL::TEXT, 'fraction',
@@ -231,8 +232,8 @@ CROSS JOIN (
         ('currency_code', NULL::NUMERIC, 'TEST', NULL::TEXT,
             'Synthetic currency code used only in tests.')
 ) AS parameter(parameter_name, numeric_value, text_value, unit, description)
-WHERE rule_set_code = 'DEMO_RECYCLED_CONTENT_TAX'
-  AND version = '1.0.0'
+WHERE rule_set.rule_set_code = 'DEMO_RECYCLED_CONTENT_TAX'
+  AND rule_set.version = '1.0.0'
 ON CONFLICT (rule_set_id, parameter_name) DO NOTHING;
 
 CREATE OR REPLACE FUNCTION packaging.refresh_component_scope()
