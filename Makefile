@@ -1,4 +1,4 @@
-.PHONY: db-up db-down db-reset db-migrate db-seed db-smoke sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke sap-demo lint typecheck test
+.PHONY: db-up db-down db-reset db-migrate db-seed db-smoke sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke classification-refresh classification-smoke classification-conflict-smoke sap-demo lint typecheck test
 
 db-up:
 	docker compose up -d db
@@ -52,4 +52,13 @@ core-smoke:
 cycle-smoke:
 	poetry run python scripts/db_sql.py sql/core/cycle_detection_smoke.sql
 
-sap-demo: db-migrate sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke
+classification-refresh:
+	poetry run python scripts/db_sql.py sql/classification/refresh_classification.sql
+
+classification-smoke:
+	poetry run python scripts/db_sql.py sql/classification/classification_smoke.sql
+
+classification-conflict-smoke:
+	poetry run python scripts/db_sql.py sql/classification/conflict_override_smoke.sql
+
+sap-demo: db-migrate sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke classification-refresh classification-smoke classification-conflict-smoke
