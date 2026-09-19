@@ -266,6 +266,111 @@ make classification-conflict-smoke
 
 The contradiction smoke test creates a temporary synthetic conflict, verifies that the material becomes `conflict`, adds a reviewed override, verifies the `overridden` result, and rolls the entire test back.
 
+
+## Plastic packaging assessment
+
+The packaging layer connects the canonical BOM and material-classification layers to an auditable plastic-weight assessment.
+
+It deliberately separates:
+
+- packaging scope;
+- material classification;
+- material weight;
+- recycled-content evidence;
+- tax-policy configuration.
+
+### Packaging scope
+
+Packaging status is resolved independently from material family.
+
+For example, a component can be:
+
+- packaging + plastic;
+- packaging + paper;
+- non-packaging + plastic;
+- unresolved and therefore sent to review.
+
+Scope rules can inspect SAP material group, material type, description, or material ID. Reviewed overrides are stored separately from rule evidence.
+
+### Plastic and recycled weight
+
+For each exploded BOM component, the assessment stores:
+
+- cumulative component quantity;
+- component unit weight;
+- normalized mass factor;
+- total component weight in kilograms;
+- plastic weight;
+- recycled-content fraction;
+- recycled plastic weight;
+- the recycled-content evidence record used.
+
+The synthetic example resolves the three packaging components as:
+
+- bottle: 35 g, HDPE, 60% recycled;
+- closure: 8 g, PP, 25% recycled;
+- label: 2 g, paper.
+
+This yields:
+
+```text
+plastic weight = 0.035 + 0.008 = 0.043 kg
+recycled plastic weight = 0.035 × 0.60 + 0.008 × 0.25 = 0.023 kg
+recycled fraction = 0.023 / 0.043 ≈ 0.5349
+```
+
+### Recycled-content evidence
+
+Recycled content is evidence-dated and may come from:
+
+- supplier declarations;
+- certificates;
+- SAP attributes;
+- manual review;
+- synthetic fixtures used only for testing.
+
+The assessment selects the best effective evidence for the requested assessment date, prioritising reviewed and higher-confidence records.
+
+### Configurable tax rules
+
+Tax policy is stored separately in `tax.rule_set` and `tax.rule_parameter`.
+
+The repository includes a **synthetic demo rule set only**. It is intentionally not a representation of current UK or any other legislation. Its purpose is to prove that the evaluator can consume versioned parameters without hard-coding policy into the BOM or classification layers.
+
+A policy evaluator uses:
+
+- an effective-dated rule set;
+- named parameters;
+- the packaging assessment output;
+- an explainable JSON trace.
+
+If any component still requires review, the tax decision becomes `review` instead of silently assuming missing facts.
+
+### Explainability
+
+Two views expose the reasoning chain:
+
+```sql
+SELECT *
+FROM packaging.assessment_trace
+ORDER BY assessment_run_id, depth, component_assessment_id;
+
+SELECT *
+FROM tax.assessment_trace
+ORDER BY tax_assessment_id;
+```
+
+Each component trace retains references to the BOM component, material lineage, packaging rule, classification result, weight source, material path, and recycled-content evidence.
+
+### End-to-end checks
+
+```bash
+make packaging-smoke
+make packaging-review-smoke
+```
+
+The first test proves the complete calculation with reviewed synthetic evidence. The second removes those decisions and verifies that unresolved classifications correctly block an automatic tax result.
+
 ## Current status
 
 The repository is in its foundation phase.
