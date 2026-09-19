@@ -19,6 +19,8 @@ class SapIngestionResult:
     table: str
     source_file: str
     row_count: int
+    quarantine_count: int = 0
+    source_format: str | None = None
     skipped: bool = False
 
 
@@ -106,6 +108,8 @@ def ingest_sap_csv(table: str, path: Path) -> SapIngestionResult:
             table=contract.target_table,
             source_file=path.name,
             row_count=0,
+            quarantine_count=0,
+            source_format=None,
             skipped=True,
         )
 
@@ -118,7 +122,17 @@ def ingest_sap_csv(table: str, path: Path) -> SapIngestionResult:
             "FROM STDIN WITH (FORMAT CSV, HEADER TRUE);\n"
             + prepared.csv_text
         )
-        run_psql(copy_sql)
+        if prepared.row_count > 0:
+            run_psql(copy_sql)
+
+        if prepared.quarantine_count > 0:
+            quarantine_columns = ", ".join(prepared.quarantine_columns)
+            quarantine_sql = (
+                f"COPY raw.quarantine ({quarantine_columns}) "
+                "FROM STDIN WITH (FORMAT CSV, HEADER TRUE);\n"
+                + prepared.quarantine_csv_text
+            )
+            run_psql(quarantine_sql)
     except Exception:
         _mark_ingestion_run(ingestion_run_id, "failed")
         raise
@@ -129,5 +143,7 @@ def ingest_sap_csv(table: str, path: Path) -> SapIngestionResult:
         table=prepared.table,
         source_file=path.name,
         row_count=prepared.row_count,
+        quarantine_count=prepared.quarantine_count,
+        source_format=prepared.format_name,
         skipped=False,
     )
