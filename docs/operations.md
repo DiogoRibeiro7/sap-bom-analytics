@@ -128,3 +128,30 @@ The roles are:
 | `sap_bom_processor` | Reconciliation and derived-layer processing |
 
 Login creation, passwords, certificates, workload identity, and secret rotation are deployment concerns and are intentionally not stored in the repository.
+
+
+## PyPI trusted publishing
+
+PyPI publication is intentionally separate from GitHub Release creation.
+
+The workflow `.github/workflows/pypi.yml` publishes an **existing GitHub Release** to PyPI through OpenID Connect. It does not rebuild distributions and it does not use an API token.
+
+The PyPI Trusted Publisher should be configured with:
+
+| Setting | Value |
+| --- | --- |
+| PyPI project | `sap-bom-analytics` |
+| Owner | `DiogoRibeiro7` |
+| Repository | `sap-bom-analytics` |
+| Workflow | `pypi.yml` |
+| Environment | `pypi` |
+
+For the first publication, PyPI supports a pending Trusted Publisher so the project can be created by the first successful OIDC publication.
+
+After the publisher is configured, run the **Publish to PyPI** workflow manually with an existing GitHub release tag such as:
+
+```text
+v0.1.1
+```
+
+The workflow verifies the tag against both package version declarations, downloads the exact wheel and source archive attached to that GitHub Release, validates their filenames, and publishes those files to PyPI.

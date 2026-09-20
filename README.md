@@ -497,7 +497,7 @@ CI applies the role model and verifies representative allowed and denied privile
 
 ## Current status
 
-The project is preparing its first public release, **0.1.0**.
+The current security-patched GitHub release is **0.1.1**.
 
 The implemented pipeline now covers:
 
