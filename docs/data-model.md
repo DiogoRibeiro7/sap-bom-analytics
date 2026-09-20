@@ -65,3 +65,28 @@ erDiagram
 ```
 
 The key invariant is that source facts, inferred classifications, human overrides, and policy decisions remain different records.
+
+
+## SAP BOM item semantics
+
+The canonical BOM component retains operational SAP item semantics that affect explosion quantities:
+
+- `item_category` from STPO `POSTP`;
+- `is_deleted` from STPO `LKENZ`;
+- `is_fixed_quantity` from STPO `FMENG`;
+- `component_scrap_percent` from STPO `AUSCH`;
+- `net_scrap_indicator` from STPO `NETAU`.
+
+Deleted items remain stored for lineage but are excluded from `core.explode_bom(...)`.
+
+For variable-quantity items, the effective edge factor is:
+
+```text
+(component quantity × (1 + component scrap / 100)) / BOM base quantity
+```
+
+Fixed-quantity items ignore the requested parent quantity and retain their adjusted fixed amount.
+
+The net scrap indicator is preserved but does not yet change the calculation because assembly and operation scrap are not yet modelled.
+
+Phantom assemblies are intentionally not inferred from STPO alone. SAP determines phantom behavior from material special-procurement and explosion-type semantics, which will be modelled separately.
