@@ -1,4 +1,4 @@
-.PHONY: db-up db-down db-reset db-migrate db-seed db-smoke sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke classification-refresh classification-smoke classification-conflict-smoke packaging-smoke packaging-review-smoke analytics-smoke idempotency-check incremental-smoke performance-smoke security-apply security-smoke docs-build docs-serve sap-demo lint typecheck test
+.PHONY: audit db-up db-down db-reset db-migrate db-seed db-smoke sap-ingest-example staging-refresh staging-smoke core-refresh core-smoke cycle-smoke classification-refresh classification-smoke classification-conflict-smoke packaging-smoke packaging-review-smoke analytics-smoke idempotency-check incremental-smoke performance-smoke security-apply security-smoke docs-build docs-serve sap-demo lint typecheck test
 
 db-up:
 	docker compose up -d --wait db
@@ -92,3 +92,7 @@ security-apply:
 
 security-smoke:
 	poetry run python scripts/db_sql.py sql/security/security_smoke.sql
+
+audit:
+	poetry run python -m pip freeze --exclude-editable > /tmp/requirements-audit.txt
+	poetry run pip-audit --strict --progress-spinner off --no-deps --requirement /tmp/requirements-audit.txt
