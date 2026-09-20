@@ -160,7 +160,9 @@ INSERT INTO staging.bom_component (
     bom_number, bom_alternative, parent_material_id, normalized_parent_material_id,
     component_material_id, normalized_component_material_id, item_number,
     item_node, item_counter, quantity, unit, valid_from, change_number,
-    plant_code, bom_usage, source_mast_id, source_stpo_id, ingestion_run_id
+    item_category, is_deleted, is_fixed_quantity, component_scrap_percent,
+    net_scrap_indicator, plant_code, bom_usage, source_mast_id, source_stpo_id,
+    ingestion_run_id
 )
 SELECT
     header.bom_number,
@@ -180,6 +182,79 @@ SELECT
         THEN to_date(trim(stpo.datuv), 'YYYYMMDD')
     END,
     nullif(trim(stpo.aennr), ''),
+    nullif(trim(stpo.postp), ''),
+    upper(trim(coalesce(stpo.lkenz, ''))) = 'X',
+    upper(trim(coalesce(stpo.fmeng, ''))) = 'X',
+    CASE
+        WHEN trim(coalesce(stpo.ausch, '')) ~ '^[+-]?[0-9]+([.][0-9]+)?
+    header.bom_usage,
+    header.source_mast_id,
+    stpo.raw_stpo_id,
+    header.ingestion_run_id
+FROM staging.bom_header AS header
+JOIN latest_stpo AS stpo
+  ON stpo.stlnr = header.bom_number;
+
+INSERT INTO staging.data_quality_issue (
+    issue_type, severity, entity_type, entity_key, details, ingestion_run_id
+)
+SELECT
+    'missing_material_master',
+    'error',
+    'bom_component',
+    component_material_id,
+    jsonb_build_object(
+        'bom_number', bom_number,
+        'parent_material_id', parent_material_id,
+        'component_material_id', component_material_id
+    ),
+    ingestion_run_id
+FROM staging.bom_component AS component
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM staging.material AS material
+    WHERE material.normalized_material_id = component.normalized_component_material_id
+);
+
+INSERT INTO staging.data_quality_issue (
+    issue_type, severity, entity_type, entity_key, details, ingestion_run_id
+)
+SELECT
+    'missing_bom_header',
+    'error',
+    'bom_header',
+    bom_number,
+    jsonb_build_object(
+        'parent_material_id', parent_material_id,
+        'bom_number', bom_number,
+        'bom_alternative', bom_alternative
+    ),
+    ingestion_run_id
+FROM staging.bom_header
+WHERE source_stko_id IS NULL;
+
+INSERT INTO staging.data_quality_issue (
+    issue_type, severity, entity_type, entity_key, details, ingestion_run_id
+)
+SELECT
+    'invalid_unit_conversion',
+    'warning',
+    'material',
+    sap_material_id,
+    jsonb_build_object(
+        'alternative_unit', alternative_unit,
+        'numerator', numerator,
+        'denominator', denominator
+    ),
+    ingestion_run_id
+FROM staging.unit_conversion
+WHERE conversion_factor IS NULL;
+
+COMMIT;
+
+        THEN trim(stpo.ausch)::NUMERIC
+    END,
+    upper(trim(coalesce(stpo.netau, ''))) = 'X',
     header.plant_code,
     header.bom_usage,
     header.source_mast_id,
