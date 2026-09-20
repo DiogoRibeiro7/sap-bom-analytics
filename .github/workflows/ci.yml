@@ -86,6 +86,7 @@ jobs:
           make core-refresh
           make core-smoke
           make cycle-smoke
+          make item-semantics-smoke
           make classification-refresh
           make classification-smoke
           make classification-conflict-smoke

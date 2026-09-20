@@ -93,6 +93,19 @@ SAP remains the source of record. This repository provides the reconciliation an
 - [x] Security and least-privilege database roles.
 - [x] Reproducible releases and semantic versioning.
 
+
+## Phase 8 — SAP BOM item semantics
+
+- [x] Preserve SAP BOM item category (`POSTP`).
+- [x] Preserve deletion state (`LKENZ`) and exclude deleted items from explosion.
+- [x] Support fixed-quantity BOM items (`FMENG`).
+- [x] Apply component scrap percentage (`AUSCH`) to exploded requirements.
+- [x] Preserve the net scrap indicator (`NETAU`).
+- [ ] Model assembly scrap from material master data.
+- [ ] Model operation scrap and operation assignment.
+- [ ] Model phantom assemblies using material special-procurement / explosion-type data.
+- [ ] Add lot-size-aware alternative BOM selection.
+
 ## Design principles
 
 1. SAP is the source system, not the analytical model.

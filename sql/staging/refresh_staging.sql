@@ -160,7 +160,9 @@ INSERT INTO staging.bom_component (
     bom_number, bom_alternative, parent_material_id, normalized_parent_material_id,
     component_material_id, normalized_component_material_id, item_number,
     item_node, item_counter, quantity, unit, valid_from, change_number,
-    plant_code, bom_usage, source_mast_id, source_stpo_id, ingestion_run_id
+    item_category, is_deleted, is_fixed_quantity, component_scrap_percent,
+    net_scrap_indicator, plant_code, bom_usage, source_mast_id, source_stpo_id,
+    ingestion_run_id
 )
 SELECT
     header.bom_number,
@@ -172,14 +174,24 @@ SELECT
     nullif(trim(stpo.posnr), ''),
     nullif(trim(stpo.stlkn), ''),
     nullif(trim(stpo.stpoz), ''),
-    CASE WHEN trim(coalesce(stpo.menge, '')) ~ '^[+-]?[0-9]+([.][0-9]+)?$'
-         THEN trim(stpo.menge)::NUMERIC END,
+    CASE
+        WHEN trim(coalesce(stpo.menge, '')) ~ '^[+-]?[0-9]+([.][0-9]+)?$'
+        THEN trim(stpo.menge)::NUMERIC
+    END,
     upper(nullif(trim(stpo.meins), '')),
     CASE
         WHEN trim(coalesce(stpo.datuv, '')) ~ '^[0-9]{8}$'
         THEN to_date(trim(stpo.datuv), 'YYYYMMDD')
     END,
     nullif(trim(stpo.aennr), ''),
+    nullif(trim(stpo.postp), ''),
+    upper(trim(coalesce(stpo.lkenz, ''))) = 'X',
+    upper(trim(coalesce(stpo.fmeng, ''))) = 'X',
+    CASE
+        WHEN trim(coalesce(stpo.ausch, '')) ~ '^[+-]?[0-9]+([.][0-9]+)?$'
+        THEN trim(stpo.ausch)::NUMERIC
+    END,
+    upper(trim(coalesce(stpo.netau, ''))) = 'X',
     header.plant_code,
     header.bom_usage,
     header.source_mast_id,

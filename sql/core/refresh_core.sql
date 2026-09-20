@@ -100,7 +100,8 @@ WHERE ranges.bom_version_id = version.bom_version_id
 INSERT INTO core.bom_component (
     bom_version_id, component_material_id, item_number, quantity, unit,
     source_record_id, ingestion_run_id, quantity_base_unit, base_unit,
-    source_staging_bom_component_id
+    source_staging_bom_component_id, item_category, is_deleted,
+    is_fixed_quantity, component_scrap_percent, net_scrap_indicator
 )
 SELECT
     version.bom_version_id,
@@ -118,7 +119,12 @@ SELECT
         ELSE staged.quantity * conversion.conversion_factor
     END,
     component_material.base_unit,
-    staged.staging_bom_component_id
+    staged.staging_bom_component_id,
+    staged.item_category,
+    staged.is_deleted,
+    staged.is_fixed_quantity,
+    staged.component_scrap_percent,
+    staged.net_scrap_indicator
 FROM staging.bom_component AS staged
 JOIN core.material AS parent_material
   ON parent_material.sap_material_id = staged.parent_material_id
