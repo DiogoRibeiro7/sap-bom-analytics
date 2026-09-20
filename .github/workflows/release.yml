@@ -11,6 +11,9 @@ on:
 
 permissions:
   contents: write
+  id-token: write
+  attestations: write
+  artifact-metadata: write
 
 jobs:
   release:
@@ -108,8 +111,33 @@ jobs:
       - name: Build wheel and source distribution
         run: poetry build
 
+      - name: Generate CycloneDX SBOM
+        run: |
+          poetry run python -m pip freeze --exclude-editable > /tmp/requirements-sbom.txt
+          poetry run pip-audit \
+            --progress-spinner off \
+            --no-deps \
+            --requirement /tmp/requirements-sbom.txt \
+            --format cyclonedx-json \
+            --output dist/sbom.cdx.json
+
       - name: Generate SHA-256 checksums
         run: sha256sum dist/* > dist/SHA256SUMS
+
+      - name: Attest build provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            dist/*.whl
+            dist/*.tar.gz
+
+      - name: Attest SBOM
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            dist/*.whl
+            dist/*.tar.gz
+          sbom-path: dist/sbom.cdx.json
 
       - name: Create release tag
         if: env.CREATE_TAG == 'true'
@@ -135,6 +163,7 @@ jobs:
           path: |
             dist/*.whl
             dist/*.tar.gz
+            dist/sbom.cdx.json
             dist/SHA256SUMS
           if-no-files-found: error
 
@@ -153,6 +182,7 @@ jobs:
           gh release create "$RELEASE_TAG" \
             dist/*.whl \
             dist/*.tar.gz \
+            dist/sbom.cdx.json \
             dist/SHA256SUMS \
             --title "SAP BOM Analytics $VERSION" \
             --notes-file "$NOTES_FILE"
