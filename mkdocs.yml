@@ -2,6 +2,7 @@ site_name: SAP BOM Analytics
 site_description: Auditable SAP BOM reconciliation, classification, and packaging analytics
 repo_url: https://github.com/DiogoRibeiro7/sap-bom-analytics
 repo_name: DiogoRibeiro7/sap-bom-analytics
+site_url: https://diogoribeiro7.github.io/sap-bom-analytics/
 
 theme:
   name: material
