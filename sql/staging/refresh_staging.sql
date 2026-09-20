@@ -174,8 +174,10 @@ SELECT
     nullif(trim(stpo.posnr), ''),
     nullif(trim(stpo.stlkn), ''),
     nullif(trim(stpo.stpoz), ''),
-    CASE WHEN trim(coalesce(stpo.menge, '')) ~ '^[+-]?[0-9]+([.][0-9]+)?$'
-         THEN trim(stpo.menge)::NUMERIC END,
+    CASE
+        WHEN trim(coalesce(stpo.menge, '')) ~ '^[+-]?[0-9]+([.][0-9]+)?$'
+        THEN trim(stpo.menge)::NUMERIC
+    END,
     upper(nullif(trim(stpo.meins), '')),
     CASE
         WHEN trim(coalesce(stpo.datuv, '')) ~ '^[0-9]{8}$'
@@ -186,7 +188,12 @@ SELECT
     upper(trim(coalesce(stpo.lkenz, ''))) = 'X',
     upper(trim(coalesce(stpo.fmeng, ''))) = 'X',
     CASE
-        WHEN trim(coalesce(stpo.ausch, '')) ~ '^[+-]?[0-9]+([.][0-9]+)?
+        WHEN trim(coalesce(stpo.ausch, '')) ~ '^[+-]?[0-9]+([.][0-9]+)?$'
+        THEN trim(stpo.ausch)::NUMERIC
+    END,
+    upper(trim(coalesce(stpo.netau, ''))) = 'X',
+    header.plant_code,
+    header.bom_usage,
     header.source_mast_id,
     stpo.raw_stpo_id,
     header.ingestion_run_id
