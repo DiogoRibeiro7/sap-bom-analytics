@@ -90,7 +90,13 @@ jobs:
         run: poetry install --no-interaction
 
       - name: Audit Python dependencies
-        run: poetry run pip-audit --strict --skip-editable --progress-spinner off
+        run: |
+          poetry run python -m pip freeze --exclude-editable > /tmp/requirements-audit.txt
+          poetry run pip-audit \
+            --strict \
+            --progress-spinner off \
+            --no-deps \
+            --requirement /tmp/requirements-audit.txt
 
       - name: Run quality checks
         run: |
