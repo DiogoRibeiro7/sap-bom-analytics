@@ -26,7 +26,7 @@ openpyxl = ">=3.1,<4.0"
 sap-bom = "sap_bom_analytics.cli:main"
 
 [tool.poetry.group.dev.dependencies]
-mypy = ">=1.10,<2.0"
+mypy = ">=1.10,<3.0"
 pytest = ">=8.0,<10.0"
 ruff = ">=0.9,<1.0"
 mkdocs = ">=1.6,<2.0"
