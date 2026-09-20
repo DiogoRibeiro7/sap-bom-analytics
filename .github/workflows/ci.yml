@@ -29,6 +29,10 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction
 
+
+      - name: Audit Python dependencies
+        run: poetry run pip-audit --strict --skip-editable --progress-spinner off
+
       - name: Lint
         run: poetry run ruff check .
 
