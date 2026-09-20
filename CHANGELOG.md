@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format follows Keep a Changelog principles and the project uses semantic versioning.
 
+## [0.1.1] - 2026-09-20
+
+### Security
+
+- Raise `pyarrow` to a patched range starting at 23.0.1 to exclude CVE-2026-25087.
+- Raise `pymdown-extensions` to the patched 11.x line, excluding the path-traversal and high-severity ReDoS advisories affecting older releases.
+- Raise the `mkdocs-material` floor to 9.7.7, the patched release for CVE-2026-73295.
+- Add an explicit Python-Markdown floor of 3.8.1 to exclude CVE-2025-69534.
+- Add `pip-audit` to CI and release validation.
+- Add Dependabot configuration for Python and GitHub Actions dependencies.
+
 ## [0.1.0] - 2026-09-19
 
 ### Added

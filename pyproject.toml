@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sap-bom-analytics"
-version = "0.1.0"
+version = "0.1.1"
 description = "Auditable ingestion, reconciliation, classification, and analytics for SAP-derived Bills of Materials."
 authors = ["Diogo Ribeiro"]
 homepage = "https://github.com/DiogoRibeiro7/sap-bom-analytics"
@@ -19,7 +19,7 @@ packages = [{ include = "sap_bom_analytics", from = "src" }]
 
 [tool.poetry.dependencies]
 python = ">=3.12,<4.0"
-pyarrow = ">=18.0,<23.0"
+pyarrow = ">=23.0.1,<26.0"
 openpyxl = ">=3.1,<4.0"
 
 [tool.poetry.scripts]
@@ -30,9 +30,11 @@ mypy = ">=1.10,<2.0"
 pytest = ">=8.0,<10.0"
 ruff = ">=0.9,<1.0"
 mkdocs = ">=1.6,<2.0"
-mkdocs-material = ">=9.6,<10.0"
-pymdown-extensions = ">=10.14,<11.0"
+mkdocs-material = ">=9.7.7,<10.0"
+pymdown-extensions = ">=11.0.2,<12.0"
 hypothesis = ">=6.130,<7.0"
+markdown = ">=3.8.1,<4.0"
+pip-audit = ">=2.10.1,<3.0"
 
 [build-system]
 requires = ["poetry-core>=1.9.0"]
