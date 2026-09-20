@@ -4,6 +4,8 @@ A data-engineering and analytics framework for turning SAP-derived Bill of Mater
 
 SAP remains the source system. This repository focuses on ingestion, reconciliation, lineage, BOM reconstruction, and downstream analytical use cases.
 
+Documentation: https://diogoribeiro7.github.io/sap-bom-analytics/
+
 ## Why this exists
 
 Operational SAP data is designed for transactions, not for analytical questions such as:
