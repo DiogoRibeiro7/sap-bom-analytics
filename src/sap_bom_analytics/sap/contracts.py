@@ -85,7 +85,8 @@ SAP_CONTRACTS: Final[dict[str, SapExtractContract]] = {
         target_table="raw.stpo",
         required_columns=("stlty", "stlnr", "idnrk"),
         optional_columns=(
-            "stlkn", "stpoz", "posnr", "menge", "meins", "datuv", "aennr"
+            "stlkn", "stpoz", "posnr", "menge", "meins", "datuv", "aennr",
+            "postp", "lkenz", "fmeng", "ausch", "netau"
         ),
     ),
     "marm": SapExtractContract(
